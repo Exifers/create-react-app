@@ -100,7 +100,7 @@ module.exports = function(webpackEnv) {
         (a, c, i) =>
           i === 0
             ? a + c
-            : !!a[a.length - 1].match(/[a-zA-Z0-9]$/)
+            : !!a.match(/[a-zA-Z0-9]$/)
             ? a + c[0].toUpperCase() + c.substring(1)
             : a + c,
         ''
