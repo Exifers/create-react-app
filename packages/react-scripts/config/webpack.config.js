@@ -89,6 +89,35 @@ module.exports = function(webpackEnv) {
   // Get environment variables to inject into our app.
   const env = getClientEnvironment(publicUrl);
 
+  // Convert CSS classname into CSS module classname
+  // Adapted from
+  // https://github.com/sindresorhus/camelcase/blob/master/index.js#L65
+  const processClassname = input => {
+    if (input.length === 0) {
+      return '';
+    }
+
+    if (input.length === 1) {
+      return input.toLowerCase();
+    }
+
+    input.replace(/^[_.\- ]+/, '');
+
+    if (input.length === 0) {
+      return '';
+    }
+
+    let firstCharacter = input[0];
+
+    input
+      .toLowerCase()
+      .replace(/[_.\- ]+(\w|$)/g, (_, p1) => p1.toUpperCase())
+      .replace(/\d+(\w|$)/g, m => m.toUpperCase());
+
+    input[0] = firstCharacter;
+    return input;
+  };
+
   // common function to get style loaders
   const getStyleLoaders = (cssOptions, preProcessor) => {
     const loaders = [
@@ -98,7 +127,7 @@ module.exports = function(webpackEnv) {
         options: shouldUseRelativeAssetPaths ? { publicPath: '../../' } : {},
       },
       {
-        loader: require.resolve('css-loader'),
+        loader: require.resolve('css-loader-functional-locals-convention'),
         options: cssOptions,
       },
       {
@@ -270,8 +299,8 @@ module.exports = function(webpackEnv) {
               : false,
           },
           cssProcessorPluginOptions: {
-              preset: ['default', { minifyFontValues: { removeQuotes: false } }]
-          }
+            preset: ['default', { minifyFontValues: { removeQuotes: false } }],
+          },
         }),
       ],
       // Automatically split vendor and commons
@@ -521,6 +550,7 @@ module.exports = function(webpackEnv) {
                 modules: {
                   getLocalIdent: getCSSModuleLocalIdent,
                 },
+                localsConvention: processClassname,
               }),
             },
             // Opt-in support for SASS (using .scss or .sass extensions).
