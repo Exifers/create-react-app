@@ -114,7 +114,7 @@ module.exports = function(webpackEnv) {
       .replace(/[_.\- ]+(\w|$)/g, (_, p1) => p1.toUpperCase())
       .replace(/\d+(\w|$)/g, m => m.toUpperCase());
 
-    input[0] = firstCharacter;
+    input = firstCharacter + input.substring(1);
     return input;
   };
 
