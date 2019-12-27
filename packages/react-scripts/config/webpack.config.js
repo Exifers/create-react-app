@@ -90,33 +90,21 @@ module.exports = function(webpackEnv) {
   const env = getClientEnvironment(publicUrl);
 
   // Convert CSS classname into CSS module classname
-  // Adapted from
-  // https://github.com/sindresorhus/camelcase/blob/master/index.js#L65
-  const processClassname = input => {
-    if (input.length === 0) {
-      return '';
-    }
-
-    if (input.length === 1) {
-      return input.toLowerCase();
-    }
-
-    input = input.replace(/^[.\- ]+/, '');
-
-    if (input.length === 0) {
-      return '';
-    }
-
-    let firstCharacter = input[0];
-
-    input = input
-      .toLowerCase()
-      .replace(/[.\- ]+(\w|$)/g, (_, p1) => p1.toUpperCase())
-      .replace(/\d+(\w|$)/g, m => m.toUpperCase());
-
-    input = firstCharacter + input.substring(1);
-    return input;
-  };
+  // This basically converts into camel case but keeping the original case
+  // of the first letter
+  const processClassname = input =>
+    input
+      .split(/[\-.]+/)
+      .filter(s => s.length)
+      .reduce(
+        (a, c, i) =>
+          i === 0
+            ? a + c
+            : !!a[a.length - 1].match(/[a-zA-Z]$/)
+            ? a + c[0].toUpperCase() + c.substring(1)
+            : a + c,
+        ''
+      );
 
   // common function to get style loaders
   const getStyleLoaders = (cssOptions, preProcessor) => {
