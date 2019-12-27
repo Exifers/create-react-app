@@ -101,7 +101,7 @@ module.exports = function(webpackEnv) {
       return input.toLowerCase();
     }
 
-    input.replace(/^[_.\- ]+/, '');
+    input = input.replace(/^[_.\- ]+/, '');
 
     if (input.length === 0) {
       return '';
@@ -109,7 +109,7 @@ module.exports = function(webpackEnv) {
 
     let firstCharacter = input[0];
 
-    input
+    input = input
       .toLowerCase()
       .replace(/[_.\- ]+(\w|$)/g, (_, p1) => p1.toUpperCase())
       .replace(/\d+(\w|$)/g, m => m.toUpperCase());
