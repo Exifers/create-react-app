@@ -571,6 +571,7 @@ module.exports = function(webpackEnv) {
                   modules: {
                     getLocalIdent: getCSSModuleLocalIdent,
                   },
+                  localsConvention: processClassname,
                 },
                 'sass-loader'
               ),
